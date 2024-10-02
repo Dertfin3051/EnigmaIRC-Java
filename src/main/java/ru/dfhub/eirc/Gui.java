@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 public class Gui {
 
     public static enum MessageType {
-        USER_MESSAGE, SYSTEM_GOOD, SYSTEM_INFO, SYSTEM_ERROR
+        SELF_USER_MESSAGE, USER_MESSAGE, SYSTEM_GOOD, SYSTEM_INFO, SYSTEM_ERROR
     }
 
     private static final JFrame window = new JFrame("EnigmaIRC");
@@ -56,7 +56,8 @@ public class Gui {
             case SYSTEM_GOOD -> message.setForeground(new Color(0, 180, 0));
             case SYSTEM_INFO -> message.setForeground(new Color(180, 180, 0));
             case SYSTEM_ERROR -> message.setForeground(new Color(180, 0, 0));
-            default -> message.setForeground(Color.BLACK);
+            case SELF_USER_MESSAGE -> message.setForeground(new Color(170, 170, 170));
+            case USER_MESSAGE -> message.setForeground(Color.BLACK);
         }
         message.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 
