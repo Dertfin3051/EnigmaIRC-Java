@@ -8,6 +8,8 @@ version = "1.0-SNAPSHOT"
 
 tasks.jar {
     manifest.attributes["Main-Class"] = "ru.dfhub.eirc.Main"
+
+    dependsOn(tasks.shadowJar)
 }
 
 repositories {
