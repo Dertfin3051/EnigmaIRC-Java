@@ -91,6 +91,12 @@ public class Gui {
         inputField.setVisible(false);
     }
 
+    public static void scrollDown() {
+        JScrollBar newScroll = messageBoxScrollbar.getVerticalScrollBar();
+        newScroll.setValue(messageBoxScrollbar.getVerticalScrollBar().getMaximum());
+        messageBoxScrollbar.setVerticalScrollBar(newScroll);
+    }
+
     private static void updateWindow() { window.revalidate(); window.repaint(); }
 
     private static void inputAction(ActionEvent e) {
@@ -102,6 +108,8 @@ public class Gui {
                 System.exit(0);
             }
             default -> {
+                //showNewMessage(inputField.getText(), MessageType.SELF_USER_MESSAGE);
+                //scrollDown();
                 // Send message method
             }
         }
