@@ -5,12 +5,13 @@ import io.github.Dertfin3051.Colored;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
     private static ServerSocket server;
-    private static List<UserHandler> users;
+    private static ArrayList<UserHandler> users = new ArrayList<>();
 
     public static void main(String[] args) {
 
@@ -24,12 +25,18 @@ public class Main {
 
         while (true) {
             try {
-                users.add(new UserHandler(server.accept())); // Handle new user and add it to user list
+                UserHandler newUser = new UserHandler(server.accept());
+                newUser.start();
+                users.add(newUser);
             } catch (IOException e)
             {
-                new Colored("An error occurred while adding a user (%s)".formatted(e.getMessage()), Color.RED).safePrint();
+                if (!e.getMessage().contains("timeout")) new Colored("An error occurred while adding a user (%s)".formatted(e.getMessage()), Color.RED).safePrint();
             }
         }
+    }
+
+    public static void handleUserMessage(String message) {
+        users.forEach(user -> user.sendOutMessage(message)); // Yeah, nothing more for now :D
     }
 
     private static void initServer(int port, int timeout) throws IOException {
