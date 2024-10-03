@@ -33,6 +33,8 @@ public class Gui {
         setBackgroundColor(mainPanel, "#2a1f33");
 
         messageBoxScrollbar.setPreferredSize(new Dimension(780, 450));
+        messageBoxScrollbar.getHorizontalScrollBar().setPreferredSize(new Dimension(800, 8));
+        messageBoxScrollbar.getVerticalScrollBar().setPreferredSize(new Dimension(8, 500));
         messageBox.setBorder(new EmptyBorder(7, 7, 7, 7)); // Message Box padding
         setBackgroundColor(messageBox, "#4b3c57");
         messageBoxScrollbar.setBorder(new LineBorder(COMPONENT_BORDER_COLOR));
