@@ -11,7 +11,7 @@ repositories {
 }
 
 tasks.jar {
-    manifest.attributes["Main-Class"] = "ru.dfhub.eirc"
+    manifest.attributes["Main-Class"] = "ru.dfhub.eirc.Main"
 }
 
 dependencies {
