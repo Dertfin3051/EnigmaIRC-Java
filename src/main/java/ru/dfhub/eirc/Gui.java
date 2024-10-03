@@ -2,6 +2,7 @@ package ru.dfhub.eirc;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
@@ -20,6 +21,8 @@ public class Gui {
     private static final Box inputFieldPanel = Box.createHorizontalBox();
     private static final JTextField inputField = new JTextField();
 
+    private static final Color COMPONENT_BORDER_COLOR = Color.decode("#614376");
+
     public static void init() {
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setSize(800, 500);
@@ -27,13 +30,20 @@ public class Gui {
 
         mainPanel.setPreferredSize(new Dimension(800, 500));
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Window padding
+        setBackgroundColor(mainPanel, "#2a1f33");
 
         messageBoxScrollbar.setPreferredSize(new Dimension(780, 450));
         messageBox.setBorder(new EmptyBorder(7, 7, 7, 7)); // Message Box padding
+        setBackgroundColor(messageBox, "#4b3c57");
+        messageBoxScrollbar.setBorder(new LineBorder(COMPONENT_BORDER_COLOR));
 
+        inputFieldPanel.setBorder(new EmptyBorder(5, 0, 0, 0)); // Top padding
         inputFieldPanel.add(inputField);
         inputField.setPreferredSize(new Dimension(800, 30)); // 25px to input field & 5px free space
-        inputFieldPanel.setBorder(new EmptyBorder(5, 0, 0, 0)); // Top padding
+        inputField.setForeground(Color.WHITE); // Input text color
+        setBackgroundColor(inputField, "#27202e");
+        inputField.setBorder(new LineBorder(COMPONENT_BORDER_COLOR));
+
 
         inputField.addActionListener(Gui::inputAction);
 
@@ -53,11 +63,11 @@ public class Gui {
     public static void showNewMessage(String formattedMessage, MessageType type) {
         JLabel message = new JLabel(formattedMessage);
         switch (type) {
-            case SYSTEM_GOOD -> message.setForeground(new Color(0, 180, 0));
-            case SYSTEM_INFO -> message.setForeground(new Color(180, 180, 0));
-            case SYSTEM_ERROR -> message.setForeground(new Color(180, 0, 0));
-            case SELF_USER_MESSAGE -> message.setForeground(new Color(170, 170, 170));
-            case USER_MESSAGE -> message.setForeground(Color.BLACK);
+            case SYSTEM_GOOD -> message.setForeground(new Color(0, 245, 0));
+            case SYSTEM_INFO -> message.setForeground(new Color(245, 245, 0));
+            case SYSTEM_ERROR -> message.setForeground(new Color(245, 0, 0));
+            case SELF_USER_MESSAGE -> message.setForeground(Color.decode("#8d769e"));
+            case USER_MESSAGE -> message.setForeground(Color.WHITE);
         }
         message.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 
@@ -67,7 +77,7 @@ public class Gui {
 
     public static void showWelcomeMessage() {
         JLabel message = new JLabel("Welcome to EnigmaIRC!");
-        message.setForeground(new Color(0, 180, 0));
+        message.setForeground(new Color(0, 245, 0));
         message.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
         message.setBorder(new EmptyBorder(0, 0, 10, 0));
 
@@ -96,6 +106,10 @@ public class Gui {
 
         inputField.setText("");
         updateWindow(); // Update
+    }
+
+    private static void setBackgroundColor(JComponent component, String hex) {
+        component.setOpaque(true); component.setBackground(Color.decode(hex));
     }
 
 }
