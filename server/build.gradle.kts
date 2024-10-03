@@ -15,5 +15,6 @@ repositories {
 }
 
 dependencies {
+    implementation("org.json:json:20240303")
     implementation("com.github.Dertfin3051:Colored:1.3")
 }
