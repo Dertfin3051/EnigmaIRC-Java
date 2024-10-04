@@ -1,6 +1,7 @@
 package ru.dfhub.eirc;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -25,7 +26,12 @@ public class ServerConnection extends Thread {
     @Override
     public void run() {
         while (server.isConnected()) {
-            // Read and parse data
+            try {
+                DataParser.handleInputData(in.readLine());
+            } catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
         }
     }
 
