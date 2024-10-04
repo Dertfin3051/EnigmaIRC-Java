@@ -28,6 +28,19 @@ public class DataParser {
     }
 
     /**
+     * Collect a user message into a data type accepted by the client
+     * @param message Message
+     */
+    public static void handleOutputMessage(String message) {
+        // In ftr replace with sampler
+        String template = "{\"type\":\"user-message\", \"content\":{\"user\":\"%s\", \"message\":\"%s\"}";
+
+        Main.getServerConnection().sendToServer(
+                template.formatted(Main.getConfig().getString("username"), message)
+        );
+    }
+
+    /**
      * Processing an incoming user message
      * @param data Data's "content" object
      */

@@ -29,7 +29,7 @@ public class Main {
         }
     }
 
-    public ServerConnection getServerConnection() {
+    public static ServerConnection getServerConnection() {
         return serverConnection;
     }
 

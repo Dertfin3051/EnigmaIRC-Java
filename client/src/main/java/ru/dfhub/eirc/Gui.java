@@ -110,9 +110,8 @@ public class Gui {
                 System.exit(0);
             }
             default -> {
-                //showNewMessage(inputField.getText(), MessageType.SELF_USER_MESSAGE);
-                //scrollDown();
-                // Send message method
+                DataParser.handleOutputMessage(inputField.getText());
+                scrollDown();
             }
         }
 
