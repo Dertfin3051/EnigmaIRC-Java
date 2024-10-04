@@ -55,6 +55,8 @@ public class Gui {
     }
 
     public static void show() {
+        window.pack();
+        window.setLocationRelativeTo(null);
         window.setVisible(true);
     }
 
