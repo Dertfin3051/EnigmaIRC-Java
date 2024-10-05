@@ -24,7 +24,6 @@ public class DataParser {
         switch (dataObj.getString("type")) {
             case "user-message" -> handleUserMessage(dataObj.getJSONObject("content"));
         }
-        Gui.showNewMessage(data, Gui.MessageType.USER_MESSAGE);
     }
 
     /**
@@ -33,7 +32,7 @@ public class DataParser {
      */
     public static void handleOutputMessage(String message) {
         // In ftr replace with sampler
-        String template = "{\"type\":\"user-message\", \"content\":{\"user\":\"%s\", \"message\":\"%s\"}";
+        String template = "{\"type\":\"user-message\", \"content\":{\"user\":\"%s\", \"message\":\"%s\"}}";
 
         Main.getServerConnection().sendToServer(
                 template.formatted(Main.getConfig().getString("username"), message)

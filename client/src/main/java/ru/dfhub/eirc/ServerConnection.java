@@ -40,6 +40,6 @@ public class ServerConnection extends Thread {
      * @param data Data
      */
     public void sendToServer(String data) {
-        out.write(data);
+        out.println(data);
     }
 }

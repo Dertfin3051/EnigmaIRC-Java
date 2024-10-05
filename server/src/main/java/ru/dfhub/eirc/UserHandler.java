@@ -47,6 +47,6 @@ public class UserHandler extends Thread {
     }
 
     public void sendOutMessage(String message) {
-        out.write(message);
+        out.println(message);
     }
 }
