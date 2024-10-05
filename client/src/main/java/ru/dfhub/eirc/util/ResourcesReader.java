@@ -30,7 +30,7 @@ public class ResourcesReader {
         String line;
         try {
             while ((line = reader.readLine()) != null) {
-                builder.append(line);
+                builder.append(line).append("\n");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
