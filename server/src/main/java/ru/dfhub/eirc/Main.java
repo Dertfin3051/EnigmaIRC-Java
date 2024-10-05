@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 public class Main {
 
@@ -49,7 +50,14 @@ public class Main {
     }
 
     public static void handleUserMessage(String message) {
-        users.forEach(user -> user.sendOutMessage(message)); // Yeah, nothing more for now :D
+        users.forEach(user -> {
+            try {
+                user.sendOutMessage(message);
+            } catch (ConcurrentModificationException e)
+            {
+                users.remove(user);
+            } // User left and output stream throws exception
+        } );
     }
 
     private static void initServer(int port) throws IOException {
