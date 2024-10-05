@@ -70,7 +70,7 @@ public class Gui {
             case SYSTEM_GOOD -> message.setForeground(new Color(0, 245, 0));
             case SYSTEM_INFO -> message.setForeground(new Color(245, 245, 0));
             case SYSTEM_ERROR -> message.setForeground(new Color(245, 0, 0));
-            case SELF_USER_MESSAGE -> message.setForeground(Color.decode("#8d769e"));
+            case SELF_USER_MESSAGE -> message.setForeground(Color.decode("#cbb6dc"));
             case USER_MESSAGE -> message.setForeground(Color.WHITE);
         }
         message.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
