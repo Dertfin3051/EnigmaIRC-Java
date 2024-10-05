@@ -1,6 +1,7 @@
 package ru.dfhub.eirc;
 
 import org.json.JSONObject;
+import ru.dfhub.eirc.util.ResourcesReader;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -28,22 +29,8 @@ public class DataParser {
             return "message_templates/%s.json".formatted(this.fileName);
         }
 
-        public String getTemplate() throws Exception {
-            InputStream is = Main.class.getClassLoader().getResourceAsStream(this.getResourcesPath());
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-
-            StringBuilder stringBuilder = new StringBuilder();
-            String line;
-            while ((line = br.readLine()) != null) {
-                stringBuilder.append(line);
-            }
-
-            return stringBuilder.toString().replace("\n", "");
-            /*
-            return Files.readString(
-                    Path.of(Main.class.getClassLoader().getResource(this.getResourcesPath()).toURI())
-            ).replace("\n", "");
-             */
+        public String getTemplate() {
+            return new ResourcesReader(this.getResourcesPath()).readString().replace("\n", "");
         }
     }
 

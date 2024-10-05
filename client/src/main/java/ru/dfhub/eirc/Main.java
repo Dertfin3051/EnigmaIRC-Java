@@ -18,6 +18,7 @@ public class Main {
         {
             Gui.breakInput();
             Gui.showNewMessage("An error occurred while reading the config!", Gui.MessageType.SYSTEM_ERROR);
+            return;
         }
 
         try {
@@ -26,6 +27,7 @@ public class Main {
         {
             Gui.breakInput();
             Gui.showNewMessage("Failed connect to the server!", Gui.MessageType.SYSTEM_ERROR);
+            return;
         }
 
         DataParser.handleOutputSession(true);

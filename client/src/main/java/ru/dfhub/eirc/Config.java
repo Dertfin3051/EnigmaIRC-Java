@@ -1,6 +1,7 @@
 package ru.dfhub.eirc;
 
 import org.json.JSONObject;
+import ru.dfhub.eirc.util.ResourcesReader;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -47,9 +48,7 @@ public class Config {
      * @return Config
      */
     private static String getDefaultConfig() throws Exception {
-        return Files.readString(
-                Paths.get(Main.class.getClassLoader().getResource("config.json").toURI())
-        );
+        return new ResourcesReader("config.json").readString();
     }
 
     /**
