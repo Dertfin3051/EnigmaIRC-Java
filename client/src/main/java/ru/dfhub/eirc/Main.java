@@ -27,6 +27,8 @@ public class Main {
             Gui.breakInput();
             Gui.showNewMessage("Failed connect to the server!", Gui.MessageType.SYSTEM_ERROR);
         }
+
+        DataParser.handleOutputSession(true);
     }
 
     public static ServerConnection getServerConnection() {

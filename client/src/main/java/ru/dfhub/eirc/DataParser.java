@@ -2,7 +2,11 @@ package ru.dfhub.eirc;
 
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -28,9 +32,21 @@ public class DataParser {
         }
 
         public String getTemplate() throws Exception {
+            InputStream is = Main.class.getClassLoader().getResourceAsStream(this.getResourcesPath());
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                stringBuilder.append(line);
+            }
+
+            return stringBuilder.toString().replace("\n", "");
+            /*
             return Files.readString(
-                    Paths.get(Main.class.getClassLoader().getResource(this.getResourcesPath()).toURI())
+                    Path.of(Main.class.getClassLoader().getResource(this.getResourcesPath()).toURI())
             ).replace("\n", "");
+             */
         }
     }
 
@@ -57,6 +73,7 @@ public class DataParser {
             template = MessageType.USER_MESSAGE.getTemplate();
         } catch (Exception e) {
             Gui.showNewMessage("There was an error sending the message (receiving template)", Gui.MessageType.SYSTEM_ERROR);
+            e.printStackTrace();
             return;
         }
 
@@ -64,6 +81,24 @@ public class DataParser {
         Main.getServerConnection().sendToServer(template
             .replace("%user%", Main.getConfig().getString("username"))
             .replace("%message%", message)
+        );
+    }
+
+    public static void handleOutputSession(boolean isJoin) {
+        String status = isJoin ? "join" : "leave";
+
+        String template;
+        try {
+            template = MessageType.USER_SESSION.getTemplate();
+        } catch (Exception e) {
+            Gui.showNewMessage("There was an error sending the session status (receiving template)", Gui.MessageType.SYSTEM_ERROR);
+            e.printStackTrace();
+            return;
+        }
+
+        Main.getServerConnection().sendToServer(template
+                .replace("%user%", Main.getConfig().getString("username"))
+                .replace("%status%", status)
         );
     }
 
