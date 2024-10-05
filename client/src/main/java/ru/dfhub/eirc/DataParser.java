@@ -2,6 +2,9 @@ package ru.dfhub.eirc;
 
 import org.json.JSONObject;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 /**
  * Class for working with data and processing it
  */
@@ -11,7 +14,24 @@ public class DataParser {
      * Types of incoming and outgoing messages
      */
     public enum MessageType {
-        USER_MESSAGE, USER_SESSION
+        USER_MESSAGE("user_message"),
+        USER_SESSION("user_session");
+
+        private String fileName;
+
+        MessageType(String fileName) {
+            this.fileName = fileName;
+        }
+
+        private String getResourcesPath() {
+            return "message_templates/%s.json".formatted(this.fileName);
+        }
+
+        public String getTemplate() throws Exception {
+            return Files.readString(
+                    Paths.get(Main.class.getClassLoader().getResource(this.getResourcesPath()).toURI())
+            ).replace("\n", "");
+        }
     }
 
     /**
@@ -31,11 +51,18 @@ public class DataParser {
      * @param message Message
      */
     public static void handleOutputMessage(String message) {
-        // In ftr replace with sampler
-        String template = "{\"type\":\"user-message\", \"content\":{\"user\":\"%s\", \"message\":\"%s\"}}";
+        String template;
+        try {
+            template = MessageType.USER_MESSAGE.getTemplate();
+        } catch (Exception e) {
+            Gui.showNewMessage("There was an error sending the message (receiving template)", Gui.MessageType.SYSTEM_ERROR);
+            return;
+        }
 
-        Main.getServerConnection().sendToServer(
-                template.formatted(Main.getConfig().getString("username"), message)
+
+        Main.getServerConnection().sendToServer(template
+            .replace("%user%", Main.getConfig().getString("username"))
+            .replace("%message%", message)
         );
     }
 

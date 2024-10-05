@@ -1,0 +1,7 @@
+{
+  "type" : "user-message",
+  "content" : {
+    "user" : "%user%",
+    "message" : "%message%"
+  }
+}

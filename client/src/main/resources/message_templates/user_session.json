@@ -1,0 +1,7 @@
+{
+  "type" : "user-session",
+  "content" : {
+    "user" : "%user%",
+    "status" : "%status%"
+  }
+}
