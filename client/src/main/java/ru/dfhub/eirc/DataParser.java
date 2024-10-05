@@ -43,6 +43,7 @@ public class DataParser {
 
         switch (dataObj.getString("type")) {
             case "user-message" -> handleUserMessage(dataObj.getJSONObject("content"));
+            case "user-session" -> handleUserSession(dataObj.getJSONObject("content"));
         }
     }
 
@@ -81,5 +82,14 @@ public class DataParser {
         } else {
             Gui.showNewMessage(formattedMessage, Gui.MessageType.USER_MESSAGE);
         }
+    }
+
+    private static void handleUserSession(JSONObject data) {
+        String user = data.getString("user");
+        String status = data.getString("status").equals("join") ? "joined!" : "left.";
+
+        String formattedMessage = "%s %s".formatted(user, status);
+
+        Gui.showNewMessage(formattedMessage, Gui.MessageType.USER_SESSION);
     }
 }

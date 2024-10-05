@@ -9,5 +9,6 @@ public class GuiStyleTest {
         Gui.showNewMessage("Error text", Gui.MessageType.SYSTEM_ERROR);
         Gui.showNewMessage("Self user message", Gui.MessageType.SELF_USER_MESSAGE);
         Gui.showNewMessage("Other user message", Gui.MessageType.USER_MESSAGE);
+        Gui.showNewMessage("MegaUsername joined!", Gui.MessageType.USER_SESSION);
     }
 }
