@@ -29,6 +29,7 @@ public class Main {
         }
 
         DataParser.handleOutputSession(true);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> DataParser.handleOutputSession(false)));
     }
 
     public static ServerConnection getServerConnection() {
