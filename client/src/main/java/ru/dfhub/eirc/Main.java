@@ -1,6 +1,9 @@
 package ru.dfhub.eirc;
 
 import org.json.JSONObject;
+import ru.dfhub.eirc.util.Encryption;
+
+import java.io.IOException;
 
 public class Main {
 
@@ -20,6 +23,23 @@ public class Main {
             Gui.showNewMessage("An error occurred while reading the config!", Gui.MessageType.SYSTEM_ERROR);
             return;
         }
+
+        try {
+            Encryption.init();
+        } catch (Encryption.EncryptionException e)
+        {
+            Gui.showNewMessage("You haven't set the encryption key!", Gui.MessageType.SYSTEM_ERROR);
+            try {
+                Encryption.generateNewKeyFile();
+                Gui.showNewMessage("The new key is saved to the file new_key.txt", Gui.MessageType.SYSTEM_INFO);
+            } catch (IOException ex)
+            {
+                Gui.showNewMessage("An error occurred while generating and saving a new key", Gui.MessageType.SYSTEM_ERROR);
+            }
+        }
+
+        Gui.reapplyTheme();
+        Gui.show();
 
         try {
             serverConnection = new ServerConnection(config.getString("server-address"), config.getInt("server-port"));
