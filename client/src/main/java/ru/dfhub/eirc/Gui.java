@@ -54,6 +54,9 @@ public class Gui {
         show();
     }
 
+    /**
+     * Show new window on screen center
+     */
     public static void show() {
         window.pack();
         window.setLocationRelativeTo(null);
@@ -80,6 +83,9 @@ public class Gui {
         updateWindow();
     }
 
+    /**
+     * Show welcome message
+     */
     public static void showWelcomeMessage() {
         JLabel message = new JLabel("Welcome to EnigmaIRC!");
         message.setForeground(new Color(0, 245, 0));
@@ -90,6 +96,9 @@ public class Gui {
         updateWindow();
     }
 
+    /**
+     * Critical program errors that imply further inability to work
+     */
     public static void breakInput() {
         inputField.setVisible(false);
         updateWindow();
@@ -99,14 +108,24 @@ public class Gui {
         } catch (InterruptedException e) {}
     }
 
+    /**
+     * Scroll down message reading box. Only vertical scroll
+     */
     public static void scrollDown() {
         JScrollBar newScroll = messageBoxScrollbar.getVerticalScrollBar();
         newScroll.setValue(messageBoxScrollbar.getVerticalScrollBar().getMaximum());
         messageBoxScrollbar.setVerticalScrollBar(newScroll);
     }
 
+    /**
+     * Revalidate components and repaint window
+     */
     private static void updateWindow() { window.revalidate(); window.repaint(); }
 
+    /**
+     * Handle inputField's "Enter" button
+     * @param e Event
+     */
     private static void inputAction(ActionEvent e) {
         String input = inputField.getText();
         switch (input) {
@@ -125,6 +144,11 @@ public class Gui {
         updateWindow(); // Update
     }
 
+    /**
+     * Change component's background color
+     * @param component JComponent
+     * @param hex Hex-color (# and 6 symbols)
+     */
     private static void setBackgroundColor(JComponent component, String hex) {
         component.setOpaque(true); component.setBackground(Color.decode(hex));
     }
