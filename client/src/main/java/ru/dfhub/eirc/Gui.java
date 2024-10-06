@@ -92,6 +92,11 @@ public class Gui {
 
     public static void breakInput() {
         inputField.setVisible(false);
+        updateWindow();
+        try {
+            Thread.sleep(1000 * 60);
+            System.exit(0);
+        } catch (InterruptedException e) {}
     }
 
     public static void scrollDown() {

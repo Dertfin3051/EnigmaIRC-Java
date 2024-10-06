@@ -4,6 +4,7 @@ import org.json.JSONObject;
 import ru.dfhub.eirc.util.Encryption;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
 
 public class Main {
 
@@ -19,13 +20,15 @@ public class Main {
             config = Config.getConfig();
         } catch (Exception e)
         {
-            Gui.breakInput();
             Gui.showNewMessage("An error occurred while reading the config!", Gui.MessageType.SYSTEM_ERROR);
-            return;
+            Gui.breakInput();
         }
 
+        Gui.reapplyTheme();
+        Gui.show();
+
         try {
-            Encryption.init();
+            Encryption.initKey();
         } catch (Encryption.EncryptionException e)
         {
             Gui.showNewMessage("You haven't set the encryption key!", Gui.MessageType.SYSTEM_ERROR);
@@ -36,18 +39,24 @@ public class Main {
             {
                 Gui.showNewMessage("An error occurred while generating and saving a new key", Gui.MessageType.SYSTEM_ERROR);
             }
+            Gui.breakInput();
         }
 
-        Gui.reapplyTheme();
-        Gui.show();
+        try {
+            Encryption.initEncryption();
+        } catch (InvalidKeyException e)
+        {
+            Gui.showNewMessage("Your encryption key is damaged or incorrect!", Gui.MessageType.SYSTEM_ERROR);
+            Gui.showNewMessage("Run the program with an empty encryption key to generate a new one", Gui.MessageType.SYSTEM_INFO);
+            Gui.breakInput();
+        }
 
         try {
             serverConnection = new ServerConnection(config.getString("server-address"), config.getInt("server-port"));
         } catch (Exception e)
         {
-            Gui.breakInput();
             Gui.showNewMessage("Failed connect to the server!", Gui.MessageType.SYSTEM_ERROR);
-            return;
+            Gui.breakInput();
         }
 
         DataParser.handleOutputSession(true);
