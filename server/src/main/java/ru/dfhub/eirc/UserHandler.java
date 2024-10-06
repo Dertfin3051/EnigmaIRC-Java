@@ -44,6 +44,10 @@ public class UserHandler extends Thread {
         }
     }
 
+    /**
+     * Send message from server to user
+     * @param message Message
+     */
     public void sendOutMessage(String message) {
         out.println(message);
     }

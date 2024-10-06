@@ -14,6 +14,9 @@ import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.util.Base64;
 
+/**
+ * Class for initializing and using encryption
+ */
 public class Encryption {
 
     /**

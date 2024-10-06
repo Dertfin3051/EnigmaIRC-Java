@@ -54,6 +54,9 @@ public class Gui {
         show();
     }
 
+    /**
+     * Pack all components and show window ad center of screen
+     */
     public static void show() {
         window.pack();
         window.setLocationRelativeTo(null);
@@ -80,6 +83,10 @@ public class Gui {
         updateWindow();
     }
 
+    /**
+     * Show welcome message.
+     * Used instead of SYSTEM_GOOD due to increased font size
+     */
     public static void showWelcomeMessage() {
         JLabel message = new JLabel("Welcome to EnigmaIRC!");
         message.setForeground(new Color(0, 245, 0));
@@ -90,6 +97,10 @@ public class Gui {
         updateWindow();
     }
 
+    /**
+     * Block input and exit the program after 2 minutes
+     * Used for critical errors, implying the inability to further work with the program
+     */
     public static void breakInput() {
         inputField.setVisible(false);
         updateWindow();
@@ -99,14 +110,24 @@ public class Gui {
         System.exit(0);
     }
 
+    /**
+     * Scroll down messageBox. Only for vertical scroll
+     */
     public static void scrollDown() {
         JScrollBar newScroll = messageBoxScrollbar.getVerticalScrollBar();
         newScroll.setValue(messageBoxScrollbar.getVerticalScrollBar().getMaximum());
         messageBoxScrollbar.setVerticalScrollBar(newScroll);
     }
 
+    /**
+     * Revalidate all elements and repaint window
+     */
     private static void updateWindow() { window.revalidate(); window.repaint(); }
 
+    /**
+     * Handle inputField "Enter" button
+     * @param e Event
+     */
     private static void inputAction(ActionEvent e) {
         String input = inputField.getText();
         switch (input) {
@@ -125,6 +146,11 @@ public class Gui {
         updateWindow(); // Update
     }
 
+    /**
+     * Change JComponent background color
+     * @param component JComponent
+     * @param hex Hex-color (# and 6 symbols)
+     */
     private static void setBackgroundColor(JComponent component, String hex) {
         component.setOpaque(true); component.setBackground(Color.decode(hex));
     }

@@ -4,10 +4,6 @@ import org.json.JSONObject;
 import ru.dfhub.eirc.util.Encryption;
 import ru.dfhub.eirc.util.ResourcesReader;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 /**
  * Class for working with data and processing it
  */
@@ -17,8 +13,8 @@ public class DataParser {
      * Types of incoming and outgoing messages
      */
     public enum MessageType {
-        USER_MESSAGE("user_message"),
-        USER_SESSION("user_session");
+        USER_MESSAGE("user_message"), // User text messages
+        USER_SESSION("user_session"); // Messages about user join/leave
 
         private String fileName;
 
@@ -77,6 +73,10 @@ public class DataParser {
         );
     }
 
+    /**
+     * Process and send a message about your session (join/leave)
+     * @param isJoin Is join
+     */
     public static void handleOutputSession(boolean isJoin) {
         String status = isJoin ? "join" : "leave";
 
@@ -120,6 +120,10 @@ public class DataParser {
         }
     }
 
+    /**
+     * Handle input user-session(join/leave) message and show it
+     * @param data Data's "content" object
+     */
     private static void handleUserSession(JSONObject data) {
         String user = data.getString("user");
         String status = data.getString("status").equals("join") ? "joined!" : "left.";

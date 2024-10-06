@@ -7,6 +7,9 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Class for working with config
+ */
 public class Config {
 
     private static JSONObject config;

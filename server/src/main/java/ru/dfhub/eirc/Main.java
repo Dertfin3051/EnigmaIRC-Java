@@ -19,6 +19,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // Trying to load config and change server settings
         try {
             Config.init();
             config = Config.getConfig();
@@ -29,26 +30,33 @@ public class Main {
             System.exit(0);
         }
 
+        // Trying to init server/
         try {
-            initServer(serverPort); // In ftr, replace args to config params
+            initServer(serverPort);
         } catch (Exception e)
         {
             new Colored("An error occurred while initializing the server (%s)".formatted(e.getMessage()), Color.RED);
             System.exit(0);
         } // Busy or invalid port, internal network errors
 
+        // Handling new users
         while (true) {
             try {
-                UserHandler newUser = new UserHandler(server.accept());
-                newUser.start();
-                users.add(newUser);
+                UserHandler newUser = new UserHandler(server.accept()); // Accepting new user and create UserHandler
+                newUser.start(); // Run UserHandler
+                users.add(newUser); // Add to users list
             } catch (IOException e)
             {
-                if (!e.getMessage().contains("timeout")) new Colored("An error occurred while adding a user (%s)".formatted(e.getMessage()), Color.RED).safePrint();
+                new Colored("An error occurred while adding a user (%s)".formatted(e.getMessage()), Color.RED).safePrint();
             }
         }
     }
 
+    /**
+     * Handle user message (now just send it to every user)
+     * @param message Message data
+     * @throws ConcurrentModificationException Error sending message to disconnected user
+     */
     public static void handleUserMessage(String message) {
         users.forEach(user -> {
             try {

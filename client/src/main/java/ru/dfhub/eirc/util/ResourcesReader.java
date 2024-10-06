@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * Class for reading a "resources" file
+ * Util-class for reading a "resources" file
  */
 public class ResourcesReader {
 
