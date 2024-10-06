@@ -80,6 +80,7 @@ public class Gui {
         message.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15));
 
         messageBox.add(message);
+        scrollDown();
         updateWindow();
     }
 
@@ -138,11 +139,11 @@ public class Gui {
             }
             default -> {
                 DataParser.handleOutputMessage(inputField.getText());
-                scrollDown();
             }
         }
 
         inputField.setText("");
+        scrollDown();
         updateWindow(); // Update
     }
 

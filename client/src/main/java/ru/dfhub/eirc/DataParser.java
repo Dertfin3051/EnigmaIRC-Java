@@ -118,6 +118,7 @@ public class DataParser {
         } else {
             Gui.showNewMessage(formattedMessage, Gui.MessageType.USER_MESSAGE);
         }
+        Gui.scrollDown();
     }
 
     /**
@@ -131,5 +132,6 @@ public class DataParser {
         String formattedMessage = "%s %s".formatted(user, status);
 
         Gui.showNewMessage(formattedMessage, Gui.MessageType.USER_SESSION);
+        Gui.scrollDown();
     }
 }
