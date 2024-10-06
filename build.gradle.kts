@@ -1,14 +1,33 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
-    id("java")
-    id("application")
+    java
+    id("com.gradleup.shadow") version "8.3.3" apply false
 }
 
 group = "ru.dfhub.eirc"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        mavenCentral()
+        maven("https://jitpack.io")
+    }
+
+    apply(plugin = "java")
 }
 
-dependencies {
+subprojects {
+    apply(plugin = "com.gradleup.shadow")
+    apply(plugin = "application")
+
+    tasks.build {
+        dependsOn(tasks.withType<ShadowJar>())
+    }
+
+    dependencies {
+        implementation("org.json:json:20240303")
+    }
 }
+
+tasks.jar { isEnabled = false }

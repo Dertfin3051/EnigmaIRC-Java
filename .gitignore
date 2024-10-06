@@ -5,10 +5,7 @@ build/
 !**/src/test/**/build/
 
 ### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
+.idea
 *.iws
 *.iml
 *.ipr
@@ -42,5 +39,5 @@ bin/
 .DS_Store
 
 # Debugging and testing
-
-/config.json
+/client/config.json
+config.json
