@@ -18,13 +18,13 @@ public class Config {
 
         File configFile = new File("config.json");
         if (!configFile.exists()) {
-            Gui.breakInput();
             Gui.showNewMessage("Configuration file not found!", Gui.MessageType.SYSTEM_ERROR);
             Gui.showNewMessage("A new configuration file has been generated. Set it up and restart the program", Gui.MessageType.SYSTEM_INFO);
 
             generateNewConfig();
             config = new JSONObject(getDefaultConfig());
 
+            Gui.breakInput(); // This means stopping the program
             return;
         }
 
