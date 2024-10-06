@@ -5,6 +5,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Gui {
 
@@ -23,10 +25,18 @@ public class Gui {
 
     private static final Color COMPONENT_BORDER_COLOR = Color.decode("#614376");
 
+    private static boolean isMinimized = false;
+
     public static void init() {
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setSize(800, 500);
         window.setResizable(false);
+        window.addWindowStateListener(new WindowAdapter() {
+            @Override
+            public void windowStateChanged(WindowEvent e) {
+                isMinimized = (e.getNewState() & JFrame.ICONIFIED) == JFrame.ICONIFIED;
+            }
+        }); // Window minimized event
 
         mainPanel.setPreferredSize(new Dimension(800, 500));
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Window padding
@@ -118,6 +128,10 @@ public class Gui {
         JScrollBar newScroll = messageBoxScrollbar.getVerticalScrollBar();
         newScroll.setValue(messageBoxScrollbar.getVerticalScrollBar().getMaximum());
         messageBoxScrollbar.setVerticalScrollBar(newScroll);
+    }
+
+    public static boolean isMinimized() {
+        return isMinimized;
     }
 
     /**
