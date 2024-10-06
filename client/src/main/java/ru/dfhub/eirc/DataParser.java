@@ -1,6 +1,7 @@
 package ru.dfhub.eirc;
 
 import org.json.JSONObject;
+import ru.dfhub.eirc.util.Encryption;
 import ru.dfhub.eirc.util.ResourcesReader;
 
 import java.io.BufferedReader;
@@ -61,10 +62,18 @@ public class DataParser {
             return;
         }
 
+        String encryptedMessage;
+        try {
+            encryptedMessage = Encryption.encrypt(message);
+        } catch (Exception e) {
+            Gui.showNewMessage("There was an error sending the message (encrypt process)", Gui.MessageType.SYSTEM_ERROR);
+            e.printStackTrace();
+            return;
+        }
 
         Main.getServerConnection().sendToServer(template
             .replace("%user%", Main.getConfig().getString("username"))
-            .replace("%message%", message)
+            .replace("%message%", encryptedMessage)
         );
     }
 
@@ -92,7 +101,15 @@ public class DataParser {
      */
     private static void handleUserMessage(JSONObject data) {
         String sender = data.getString("user");
-        String message = data.getString("message"); // In ftr, decrypt and handle decryption errors here
+        String encryptedMessage = data.getString("message"); // In ftr, decrypt and handle decryption errors here
+
+        String message;
+        try {
+            message = Encryption.decrypt(encryptedMessage);
+        } catch (Exception e) {
+            Gui.showNewMessage("Failed to decrypt the incoming message! (wrong encryption key)", Gui.MessageType.SYSTEM_ERROR);
+            return;
+        }
 
         String formattedMessage = "%s -> %s".formatted(sender, message); // In ftr, handle timestamps here
 

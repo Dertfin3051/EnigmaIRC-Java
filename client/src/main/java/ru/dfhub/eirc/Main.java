@@ -14,6 +14,7 @@ public class Main {
     public static void main(String[] args) {
         Gui.init();
         Gui.showWelcomeMessage();
+        Gui.show();
 
         try {
             Config.init();
@@ -23,9 +24,6 @@ public class Main {
             Gui.showNewMessage("An error occurred while reading the config!", Gui.MessageType.SYSTEM_ERROR);
             Gui.breakInput();
         }
-
-        Gui.reapplyTheme();
-        Gui.show();
 
         try {
             Encryption.initKey();
