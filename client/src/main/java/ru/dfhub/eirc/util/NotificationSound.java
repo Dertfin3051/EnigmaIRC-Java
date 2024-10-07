@@ -13,11 +13,11 @@ import java.io.InputStream;
  */
 public class NotificationSound {
 
-    private static final InputStream audioFileInputStream = Main.class.getClassLoader().getResourceAsStream("notification.wav");
-    private static final BufferedInputStream audioBufferedInputStream = new BufferedInputStream(audioFileInputStream);
-
     public static void play() {
-        try (AudioInputStream ais = AudioSystem.getAudioInputStream(audioBufferedInputStream)){
+        try {
+            InputStream audioFileInputStream = Main.class.getClassLoader().getResourceAsStream("notification.wav");
+            BufferedInputStream audioBufferedInputStream = new BufferedInputStream(audioFileInputStream);
+            AudioInputStream ais = AudioSystem.getAudioInputStream(audioBufferedInputStream);
             Clip clip = AudioSystem.getClip();
             clip.open(ais);
             clip.setFramePosition(0);
