@@ -1,5 +1,6 @@
 package ru.dfhub.eirc;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
@@ -7,6 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Gui {
 
@@ -37,6 +40,7 @@ public class Gui {
                 isMinimized = (e.getNewState() & JFrame.ICONIFIED) == JFrame.ICONIFIED;
             }
         }); // Window minimized event
+        applyAppIcon(window);
 
         mainPanel.setPreferredSize(new Dimension(800, 500));
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10)); // Window padding
@@ -160,6 +164,17 @@ public class Gui {
         inputField.setText("");
         scrollDown();
         updateWindow(); // Update
+    }
+
+    public static void applyAppIcon(JFrame frame) {
+        try (InputStream iconStream = Main.class.getClassLoader().getResourceAsStream("icon.png")) {
+            frame.setIconImage(
+                    ImageIO.read(iconStream)
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     /**
