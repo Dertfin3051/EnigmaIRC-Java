@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "ru.dfhub.eirc"
-version = "1.0-SNAPSHOT"
+version = "2.0"
 
 allprojects {
     repositories {
