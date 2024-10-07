@@ -52,7 +52,8 @@ public class Gui {
         inputFieldPanel.setBorder(new EmptyBorder(5, 0, 0, 0)); // Top padding
         inputFieldPanel.add(inputField);
         inputField.setPreferredSize(new Dimension(800, 30)); // 25px to input field & 5px free space
-        inputField.setForeground(Color.WHITE); // Input text color
+        inputField.setForeground(Color.WHITE);
+        inputField.setCaretColor(Color.WHITE); // Input text color
         setBackgroundColor(inputField, "#27202e");
         inputField.setBorder(new LineBorder(COMPONENT_BORDER_COLOR));
 
