@@ -120,7 +120,7 @@ public class DataParser {
             Gui.showNewMessage(formattedMessage, Gui.MessageType.USER_MESSAGE);
         }
         Gui.scrollDown();
-        if (Gui.isMinimized()) NotificationSound.play();
+        if (Gui.isMinimized() && Main.getConfig().optBoolean("notification-sounds", true)) NotificationSound.play();
     }
 
     /**
