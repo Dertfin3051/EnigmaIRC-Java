@@ -37,7 +37,7 @@ public class DataParser {
      * @param data Raw data from server
      */
     public static void handleInputData(String data) {
-        JSONObject dataObj = new JSONObject();
+        JSONObject dataObj;
         try {
             dataObj = new JSONObject(data);
         } catch (Exception e) { return; } // Null message from server

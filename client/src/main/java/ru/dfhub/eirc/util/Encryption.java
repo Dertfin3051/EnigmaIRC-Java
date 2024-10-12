@@ -43,7 +43,6 @@ public class Encryption {
      */
     public static void initKey() throws EncryptionException, IllegalArgumentException {
         String[] keyString = Main.getConfig().getString("security-key").split("<->");
-        System.out.println(keyString.length);
 
         if (keyString.length == 1) throw new EncryptionException("Encryption key not specified");
         if (keyString.length != 2) throw new IllegalArgumentException("Encryption key is incorrect");
