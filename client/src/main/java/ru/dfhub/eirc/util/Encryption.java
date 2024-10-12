@@ -6,12 +6,14 @@ import ru.dfhub.eirc.Main;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
+import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
@@ -30,42 +32,46 @@ public class Encryption {
     }
 
     private static SecretKey key;
+    private static IvParameterSpec iv;
     private static Cipher encryptCipher;
     private static Cipher decryptCipher;
 
     /**
      * Getting the encryption key from the config
      * @throws EncryptionException Encryption key is empty
+     * @throws IllegalArgumentException Key is invalid
      */
-    public static void initKey() throws EncryptionException {
-        String keyString = Main.getConfig().getString("security-key");
+    public static void initKey() throws EncryptionException, IllegalArgumentException {
+        String[] keyString = Main.getConfig().getString("security-key").split("<->");
+        System.out.println(keyString.length);
 
-        if (keyString.isEmpty()) throw new EncryptionException("Encryption key not specified");
+        if (keyString.length == 1) throw new EncryptionException("Encryption key not specified");
+        if (keyString.length != 2) throw new IllegalArgumentException("Encryption key is incorrect");
 
         key = new SecretKeySpec(
-                Base64.getDecoder().decode(keyString),
-                "AES");
+                Base64.getDecoder().decode(keyString[0]),
+                "AES"
+        );
+        iv = new IvParameterSpec(
+                Base64.getDecoder().decode(keyString[1])
+        );
     }
 
     /**
      * Initializing encryption and decryption methods
      * @throws InvalidKeyException Invalid key
      */
-    public static void initEncryption() throws InvalidKeyException {
+    public static void initEncryption() throws Exception {
         try {
-            encryptCipher = Cipher.getInstance("AES");
-            decryptCipher = Cipher.getInstance("AES");
+            encryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            decryptCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         } catch (Exception e) {
             Gui.breakInput();
             Gui.showNewMessage("An unexpected error occurred while initializing encryption (%s)".formatted(e.getMessage()), Gui.MessageType.SYSTEM_ERROR);
         }
 
-        encryptCipher.init(Cipher.ENCRYPT_MODE, getKey());
-        decryptCipher.init(Cipher.DECRYPT_MODE, getKey());
-    }
-
-    public static SecretKey getKey() {
-        return key;
+        encryptCipher.init(Cipher.ENCRYPT_MODE, key, iv);
+        decryptCipher.init(Cipher.DECRYPT_MODE, key, iv);
     }
 
     /**
@@ -76,9 +82,14 @@ public class Encryption {
         try {
             KeyGenerator keygen = KeyGenerator.getInstance("AES");
             keygen.init(256);
-            return Base64.getEncoder().encodeToString(
-                    keygen.generateKey().getEncoded()
-            );
+
+            byte[] iv = new byte[16];
+            new SecureRandom().nextBytes(iv);
+
+            String encKey = Base64.getEncoder().encodeToString(keygen.generateKey().getEncoded());
+            String ivString = Base64.getEncoder().encodeToString(iv);
+
+            return "%s<->%s".formatted(encKey, ivString);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -114,5 +125,26 @@ public class Encryption {
         byte[] decryptedBytes = decryptCipher.doFinal(encryptedBytes);
 
         return new String(decryptedBytes);
+    }
+
+    /**
+     * Tells you that the encryption key is incorrect and closes the program
+     */
+    public static void showIncorrectKeyError() {
+        Gui.showNewMessage("Your encryption key is damaged or incorrect!", Gui.MessageType.SYSTEM_ERROR);
+        Gui.showNewMessage("Run the program with an empty encryption key to generate a new one", Gui.MessageType.SYSTEM_INFO);
+        Gui.breakInput();
+    }
+
+    public static void showNullKeyErrorAndGenerateNewOne() {
+        Gui.showNewMessage("You haven't set the encryption key!", Gui.MessageType.SYSTEM_ERROR);
+        try {
+            Encryption.generateNewKeyFile();
+            Gui.showNewMessage("The new key is saved to the file new_key.txt", Gui.MessageType.SYSTEM_INFO);
+        } catch (IOException ex)
+        {
+            Gui.showNewMessage("An error occurred while generating and saving a new key", Gui.MessageType.SYSTEM_ERROR);
+        }
+        Gui.breakInput();
     }
 }

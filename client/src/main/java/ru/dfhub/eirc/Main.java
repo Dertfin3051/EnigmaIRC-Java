@@ -4,7 +4,6 @@ import org.json.JSONObject;
 import ru.dfhub.eirc.util.Encryption;
 
 import java.io.IOException;
-import java.security.InvalidKeyException;
 
 public class Main {
 
@@ -34,15 +33,9 @@ public class Main {
             Encryption.initKey();
         } catch (Encryption.EncryptionException e)
         {
-            Gui.showNewMessage("You haven't set the encryption key!", Gui.MessageType.SYSTEM_ERROR);
-            try {
-                Encryption.generateNewKeyFile();
-                Gui.showNewMessage("The new key is saved to the file new_key.txt", Gui.MessageType.SYSTEM_INFO);
-            } catch (IOException ex)
-            {
-                Gui.showNewMessage("An error occurred while generating and saving a new key", Gui.MessageType.SYSTEM_ERROR);
-            }
-            Gui.breakInput();
+            Encryption.showNullKeyErrorAndGenerateNewOne();
+        } catch (IllegalArgumentException e) {
+            Encryption.showIncorrectKeyError();
         }
 
         /*
@@ -51,11 +44,9 @@ public class Main {
          */
         try {
             Encryption.initEncryption();
-        } catch (InvalidKeyException e)
+        } catch (Exception e)
         {
-            Gui.showNewMessage("Your encryption key is damaged or incorrect!", Gui.MessageType.SYSTEM_ERROR);
-            Gui.showNewMessage("Run the program with an empty encryption key to generate a new one", Gui.MessageType.SYSTEM_INFO);
-            Gui.breakInput();
+            Encryption.showIncorrectKeyError();
         }
 
         /*
