@@ -37,7 +37,11 @@ public class DataParser {
      * @param data Raw data from server
      */
     public static void handleInputData(String data) {
-        JSONObject dataObj = new JSONObject(data);
+        JSONObject dataObj = new JSONObject();
+        try {
+            dataObj = new JSONObject(data);
+        } catch (Exception e) { return; } // Null message from server
+
 
         switch (dataObj.getString("type")) {
             case "user-message" -> handleUserMessage(dataObj.getJSONObject("content"));
