@@ -58,9 +58,29 @@ public class Main {
      * @throws ConcurrentModificationException Error sending message to disconnected user
      */
     public static void handleUserMessage(String message) {
-        users.forEach(user -> {
-            user.sendOutMessage(message);
-        });
+        users.forEach(user -> user.sendOutMessage(message));
+    }
+
+    /**
+     * Check if input message is leave message
+     * @param message Input message
+     * @return Is leave message
+     */
+    public static boolean isQuitMessage(String message) {
+        if (message == null) return false; // Resolves closed Scanner(InputStream) null message
+        JSONObject msg = new JSONObject(message);
+
+        if (!msg.optString("type").equals("user-session")) return false;
+        return msg.getJSONObject("content").getString("status").equals("leave");
+    }
+
+    /**
+     * Remove user from users(receivers) list and stop user thread
+     * @param userHandler UserHandler
+     */
+    public static void disconnectUser(UserHandler userHandler) {
+        users.remove(userHandler);
+        userHandler.interrupt();
     }
 
     private static void initServer(int port) throws IOException {

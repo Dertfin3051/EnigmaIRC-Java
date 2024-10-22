@@ -9,7 +9,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ConcurrentModificationException;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * A class that contains everything needed to work with a user,
@@ -38,7 +37,9 @@ public class UserHandler extends Thread {
     public void run() {
         while (socket.isConnected()) {
             try {
-                Main.handleUserMessage(in.readLine()); // Handle new message
+                String inputMessage = in.readLine();
+                Main.handleUserMessage(inputMessage); // Handle new message
+                if (Main.isQuitMessage(inputMessage)) Main.disconnectUser(this);
             } catch (IOException e)
             {
                 new Colored("An error occurred while retrieving user message (%s)".formatted(e.getMessage()), Color.RED);
