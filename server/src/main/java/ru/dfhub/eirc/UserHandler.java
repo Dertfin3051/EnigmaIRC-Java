@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ConcurrentModificationException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * A class that contains everything needed to work with a user,
@@ -40,7 +42,7 @@ public class UserHandler extends Thread {
             } catch (IOException e)
             {
                 new Colored("An error occurred while retrieving user message (%s)".formatted(e.getMessage()), Color.RED);
-            }
+            } catch (ConcurrentModificationException e) {} // Ignore this XD
         }
     }
 

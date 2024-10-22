@@ -59,13 +59,8 @@ public class Main {
      */
     public static void handleUserMessage(String message) {
         users.forEach(user -> {
-            try {
-                user.sendOutMessage(message);
-            } catch (ConcurrentModificationException e)
-            {
-                users.remove(user);
-            } // User left and output stream throws exception
-        } );
+            user.sendOutMessage(message);
+        });
     }
 
     private static void initServer(int port) throws IOException {
