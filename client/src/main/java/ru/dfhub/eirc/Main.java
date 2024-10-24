@@ -3,8 +3,6 @@ package ru.dfhub.eirc;
 import org.json.JSONObject;
 import ru.dfhub.eirc.util.Encryption;
 
-import java.io.IOException;
-
 public class Main {
 
     private static ServerConnection serverConnection;
@@ -71,5 +69,10 @@ public class Main {
 
     public static JSONObject getConfig() {
         return config;
+    }
+
+    public static void handleServerShutdown() {
+        Gui.showNewMessage("The server has shut down!", Gui.MessageType.SYSTEM_ERROR);
+        Gui.breakInput();
     }
 }

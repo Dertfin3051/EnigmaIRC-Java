@@ -1,8 +1,11 @@
 package ru.dfhub.eirc;
 
+import io.github.Dertfin3051.Background;
 import io.github.Dertfin3051.Color;
 import io.github.Dertfin3051.Colored;
+import io.github.Dertfin3051.Style;
 import org.json.JSONObject;
+import ru.dfhub.eirc.util.ResourcesReader;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -38,6 +41,15 @@ public class Main {
             new Colored("An error occurred while initializing the server (%s)".formatted(e.getMessage()), Color.RED);
             System.exit(0);
         } // Busy or invalid port, internal network errors
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            new Colored("Sending a server shutdown signal to clients...", Color.YELLOW).safePrint();
+            users.forEach(user ->
+                    user.sendOutMessage(new ResourcesReader("message_templates/server_shutdown.json").readString())
+            );
+            new Colored("Server shutdown signal sent successfull!", Color.GREEN).safePrint();
+            new Colored("Shutdown server...", Color.RED).safePrint();
+        }));
 
         // Handling new users
         while (true) {

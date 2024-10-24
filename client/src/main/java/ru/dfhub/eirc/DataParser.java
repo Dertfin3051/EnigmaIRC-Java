@@ -46,6 +46,7 @@ public class DataParser {
         switch (dataObj.getString("type")) {
             case "user-message" -> handleUserMessage(dataObj.getJSONObject("content"));
             case "user-session" -> handleUserSession(dataObj.getJSONObject("content"));
+            case "server-shutdown" -> Main.handleServerShutdown();
         }
     }
 
