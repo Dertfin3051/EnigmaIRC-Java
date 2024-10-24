@@ -22,6 +22,8 @@ public class UserHandler extends Thread {
 
     private static final Logger logger = LogManager.getLogger(UserHandler.class);
 
+    private boolean disconnected = false;
+
     /**
      * Creating a new user
      * @param socket User socket
@@ -39,7 +41,7 @@ public class UserHandler extends Thread {
      */
     @Override
     public void run() {
-        while (socket.isConnected()) {
+        while (!disconnected) {
             try {
                 String inputMessage = in.readLine();
                 logger.debug("User message received");
@@ -59,5 +61,17 @@ public class UserHandler extends Thread {
     public void sendOutMessage(String message) {
         out.println(message);
         logger.trace("Message sent to user");
+    }
+
+    public void disconnect() {
+        try {
+            in.close();
+            out.close();
+            socket.close();
+            disconnected = true;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

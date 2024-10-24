@@ -101,7 +101,8 @@ public class Main {
     public static void disconnectUser(UserHandler userHandler) {
         logger.info("Received user-leave message, disconnecting user...");
         users.remove(userHandler);
-        userHandler.interrupt();
+        userHandler.disconnect();
+        //userHandler.interrupt();
         logger.info("User disconnected successfully.");
     }
 
