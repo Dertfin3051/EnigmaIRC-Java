@@ -2,6 +2,8 @@ package ru.dfhub.eirc;
 
 import io.github.Dertfin3051.Color;
 import io.github.Dertfin3051.Colored;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,14 +22,18 @@ public class UserHandler extends Thread {
     private final BufferedReader in;
     private final PrintWriter out;
 
+    private static final Logger logger = LogManager.getLogger(UserHandler.class);
+
     /**
      * Creating a new user
      * @param socket User socket
      */
     public UserHandler(Socket socket) throws IOException {
         this.socket = socket;
+        logger.debug("Initializing user I/O streams");
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
+        logger.debug("I/O streams initialized successfully");
     }
 
     /**
@@ -38,11 +44,12 @@ public class UserHandler extends Thread {
         while (socket.isConnected()) {
             try {
                 String inputMessage = in.readLine();
+                logger.debug("User message received");
                 Main.handleUserMessage(inputMessage); // Handle new message
                 if (Main.isQuitMessage(inputMessage)) Main.disconnectUser(this);
             } catch (IOException e)
             {
-                new Colored("An error occurred while retrieving user message (%s)".formatted(e.getMessage()), Color.RED);
+                logger.error("An error occurred while retrieving user message (%s)".formatted(e.getMessage()));
             } catch (ConcurrentModificationException e) {} // Ignore this XD
         }
     }
@@ -53,5 +60,6 @@ public class UserHandler extends Thread {
      */
     public void sendOutMessage(String message) {
         out.println(message);
+        logger.trace("Message sent to user");
     }
 }

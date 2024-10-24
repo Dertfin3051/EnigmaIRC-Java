@@ -1,14 +1,15 @@
 package ru.dfhub.eirc;
 
-import io.github.Dertfin3051.Background;
 import io.github.Dertfin3051.Color;
 import io.github.Dertfin3051.Colored;
-import io.github.Dertfin3051.Style;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import ru.dfhub.eirc.util.ResourcesReader;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
@@ -20,6 +21,8 @@ public class Main {
 
     private static int serverPort;
 
+    private static final Logger logger = LogManager.getLogger(Main.class);
+
     public static void main(String[] args) {
 
         // Trying to load config and change server settings
@@ -29,7 +32,7 @@ public class Main {
             serverPort = config.optInt("server-port", 6667);
         } catch (Exception e)
         {
-            new Colored("An error occurred while initializing config (%s)".formatted(e.getMessage()), Color.RED).safePrint();
+            logger.error("An error occurred while initializing config (%s)".formatted(e.getMessage()));
             System.exit(0);
         }
 
@@ -38,28 +41,33 @@ public class Main {
             initServer(serverPort);
         } catch (Exception e)
         {
-            new Colored("An error occurred while initializing the server (%s)".formatted(e.getMessage()), Color.RED);
+            logger.error("An error occurred while initializing the server (%s)".formatted(e.getMessage()));
             System.exit(0);
         } // Busy or invalid port, internal network errors
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            new Colored("Sending a server shutdown signal to clients...", Color.YELLOW).safePrint();
+            logger.info("Sending a server shutdown signal to clients...");
             users.forEach(user ->
                     user.sendOutMessage(new ResourcesReader("message_templates/server_shutdown.json").readString())
             );
-            new Colored("Server shutdown signal sent successfull!", Color.GREEN).safePrint();
-            new Colored("Shutdown server...", Color.RED).safePrint();
+            logger.info("Server shutdown signal sent successfully!");
+            logger.info("Shutdown server...");
         }));
 
         // Handling new users
         while (true) {
             try {
-                UserHandler newUser = new UserHandler(server.accept()); // Accepting new user and create UserHandler
-                newUser.start(); // Run UserHandler
-                users.add(newUser); // Add to users list
+                Socket user = server.accept();
+                logger.debug("New user accepted. Trying to init UserHandler.");
+                UserHandler userHandler = new UserHandler(user); // Accepting new user and create UserHandler
+                logger.debug("UserHandler initialized successfully. Start processing thread...");
+                userHandler.start(); // Run UserHandler
+                users.add(userHandler); // Add to users list
+                logger.debug("Thread started. User added to user-list");
+                logger.info("New user handled successfully!");
             } catch (IOException e)
             {
-                new Colored("An error occurred while adding a user (%s)".formatted(e.getMessage()), Color.RED).safePrint();
+                logger.error("An error occurred while adding a user (%s)".formatted(e.getMessage()));
             }
         }
     }
@@ -70,7 +78,9 @@ public class Main {
      * @throws ConcurrentModificationException Error sending message to disconnected user
      */
     public static void handleUserMessage(String message) {
+        logger.debug("Trying to handle user message.");
         users.forEach(user -> user.sendOutMessage(message));
+        logger.info("User message handled successfully.");
     }
 
     /**
@@ -79,6 +89,7 @@ public class Main {
      * @return Is leave message
      */
     public static boolean isQuitMessage(String message) {
+        logger.debug("Checking for user-leave message...");
         if (message == null) return false; // Resolves closed Scanner(InputStream) null message
         JSONObject msg = new JSONObject(message);
 
@@ -91,13 +102,15 @@ public class Main {
      * @param userHandler UserHandler
      */
     public static void disconnectUser(UserHandler userHandler) {
+        logger.info("Received user-leave message, disconnecting user...");
         users.remove(userHandler);
         userHandler.interrupt();
+        logger.info("User disconnected successfully.");
     }
 
     private static void initServer(int port) throws IOException {
-        new Colored("Initializing server on port %s...".formatted(port), Color.YELLOW).safePrint();
+        logger.info("Initializing server on port %s...".formatted(port));
         server = new ServerSocket(port);
-        new Colored("Server initialized successfully!", Color.GREEN).safePrint();
+        logger.info("Server initialized successfully!");
     }
 }

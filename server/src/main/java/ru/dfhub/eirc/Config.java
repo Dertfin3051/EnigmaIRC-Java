@@ -2,6 +2,8 @@ package ru.dfhub.eirc;
 
 import io.github.Dertfin3051.Color;
 import io.github.Dertfin3051.Colored;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 import ru.dfhub.eirc.util.ResourcesReader;
 
@@ -16,13 +18,16 @@ public class Config {
 
     private static JSONObject config;
 
+    private static final Logger logger = LogManager.getLogger(Config.class);
+
     public static void init() throws Exception {
-        new Colored("Trying to read config.json...", Color.YELLOW).safePrint();
+        logger.info("Trying to init config");
 
         File configFile = new File("config.json");
         if (!configFile.exists()) {
-            new Colored("Configuration file not found!", Color.RED).safePrint();
+            logger.error("Configuration file not found!");
             generateNewConfig();
+            logger.info("Using default config");
             config = new JSONObject(getDefaultConfig());
             return;
         }
@@ -42,9 +47,9 @@ public class Config {
      * Generate new config.json file
      */
     private static void generateNewConfig() throws Exception {
-        new Colored("Generating new config file...", Color.YELLOW).safePrint();
+        logger.debug("Generating new config file...");
         Files.writeString(Paths.get("config.json"), getDefaultConfig());
-        new Colored("New config file generated successfully!", Color.GREEN).safePrint();
+        logger.info("New config file generated successfully!");
     }
 
     /**
