@@ -87,7 +87,6 @@ public class Main {
      * @return Is leave message
      */
     public static boolean isQuitMessage(String message) {
-        logger.debug("Checking for user-leave message...");
         if (message == null) return false; // Resolves closed Scanner(InputStream) null message
         JSONObject msg = new JSONObject(message);
 
