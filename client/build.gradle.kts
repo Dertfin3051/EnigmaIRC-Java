@@ -1,5 +1,5 @@
 group = "ru.dfhub.eirc"
-version = "2.1"
+version = "2.1.1"
 
 application {
     mainClass = "ru.dfhub.eirc.Main"
