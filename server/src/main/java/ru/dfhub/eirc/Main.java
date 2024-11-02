@@ -76,6 +76,7 @@ public class Main {
      * @throws ConcurrentModificationException Error sending message to disconnected user
      */
     public static void handleUserMessage(String message) {
+        if (message == null || message.isEmpty()) return;
         logger.debug("Trying to handle user message.");
         users.forEach(user -> user.sendOutMessage(message));
         logger.info("User message handled successfully.");

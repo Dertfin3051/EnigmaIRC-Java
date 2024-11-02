@@ -44,7 +44,6 @@ public class UserHandler extends Thread {
         while (!disconnected) {
             try {
                 String inputMessage = in.readLine();
-                logger.debug("User message received");
                 Main.handleUserMessage(inputMessage); // Handle new message
                 if (Main.isQuitMessage(inputMessage)) Main.disconnectUser(this);
             } catch (IOException e)
