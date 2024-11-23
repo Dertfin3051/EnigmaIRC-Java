@@ -3,12 +3,30 @@ package ru.dfhub.eirc;
 import org.json.JSONObject;
 import ru.dfhub.eirc.util.Encryption;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Main {
 
     private static ServerConnection serverConnection;
     private static JSONObject config;
 
     public static void main(String[] args) {
+        // Key generator
+        for (int i = 0; i < args.length; i++) {
+            if (List.of(
+                    "-keygen",
+                    "--keygen",
+                    "-generate",
+                    "--generate",
+                    "-g"
+            ).contains(args[i])) {
+                if (i+2 > args.length) { Encryption.generateEncryptionKeys(1); return; } // Boolean arg
+                Encryption.generateEncryptionKeys(Integer.parseInt(args[i+1])); return;
+            }
+        }
+
+
         Gui.init();
         Gui.showWelcomeMessage();
 

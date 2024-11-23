@@ -146,4 +146,11 @@ public class Encryption {
         }
         Gui.breakInput();
     }
+
+    public static void generateEncryptionKeys(int n) {
+        System.out.printf("Generating %s encryption keys...%n", n);
+        for (int i = 0; i < n; i++) {
+            System.out.printf("%s. %s%n", i+1, generateNewKey());
+        }
+    }
 }
