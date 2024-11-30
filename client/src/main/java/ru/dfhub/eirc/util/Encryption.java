@@ -147,6 +147,10 @@ public class Encryption {
         Gui.breakInput();
     }
 
+    /**
+     * CLI key generator
+     * @param n Number of keys
+     */
     public static void generateEncryptionKeys(int n) {
         System.out.printf("Generating %s encryption keys...%n", n);
         for (int i = 0; i < n; i++) {
