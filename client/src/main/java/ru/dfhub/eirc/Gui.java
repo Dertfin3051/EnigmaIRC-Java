@@ -83,7 +83,7 @@ public class Gui {
      * @param formattedMessage Formatted message
      */
     public static void showNewMessage(String formattedMessage, MessageType type) {
-        JLabel message = new JLabel(formattedMessage);
+        JLabel message = new JLabel(getMessageWithLineBreaks(formattedMessage));
         switch (type) {
             case SYSTEM_GOOD -> message.setForeground(new Color(0, 245, 0));
             case SYSTEM_INFO -> message.setForeground(new Color(245, 245, 0));
@@ -184,6 +184,29 @@ public class Gui {
      */
     private static void setBackgroundColor(JComponent component, String hex) {
         component.setOpaque(true); component.setBackground(Color.decode(hex));
+    }
+
+    /**
+     * Fit message to window width to avoid horizontal scrolling
+     * @return Message with breaks
+     */
+    private static String getMessageWithLineBreaks(String originalMessage){
+        if (originalMessage.length() <= 80) return originalMessage;
+
+        StringBuilder messageBuilder = new StringBuilder("<html>");
+        String messageRest = originalMessage;
+
+        while (true) {
+            if (messageRest.length() <= 80) {
+                messageBuilder.append(messageRest);
+                break;
+            }
+
+            messageBuilder.append(messageRest, 0, 81).append("-<br/>");
+            messageRest = messageRest.substring(81);
+        }
+
+        return messageBuilder.toString();
     }
 
 }
