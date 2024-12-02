@@ -3,7 +3,7 @@ package ru.dfhub.eirc;
 import org.json.JSONObject;
 import ru.dfhub.eirc.util.Encryption;
 import ru.dfhub.eirc.util.NotificationSound;
-import ru.dfhub.eirc.util.ResourcesReader;
+import ru.dfhub.eirc.common.ResourcesReader;
 
 /**
  * Class for working with data and processing it

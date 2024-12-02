@@ -1,7 +1,7 @@
 package ru.dfhub.eirc;
 
 import org.json.JSONObject;
-import ru.dfhub.eirc.util.ResourcesReader;
+import ru.dfhub.eirc.common.ResourcesReader;
 
 import java.io.File;
 import java.nio.file.Files;

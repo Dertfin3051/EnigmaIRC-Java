@@ -3,7 +3,7 @@ package ru.dfhub.eirc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import ru.dfhub.eirc.util.ResourcesReader;
+import ru.dfhub.eirc.common.ResourcesReader;
 
 import java.io.IOException;
 import java.net.ServerSocket;

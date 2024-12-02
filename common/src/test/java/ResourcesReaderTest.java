@@ -1,4 +1,4 @@
-import ru.dfhub.eirc.util.ResourcesReader;
+import ru.dfhub.eirc.common.ResourcesReader;
 
 public class ResourcesReaderTest {
     public static void main(String[] args) {

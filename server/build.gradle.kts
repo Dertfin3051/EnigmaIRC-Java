@@ -1,5 +1,6 @@
-group = "ru.dfhub.eirc"
-version = "2.1.1"
+plugins {
+    application
+}
 
 application {
     mainClass = "ru.dfhub.eirc.Main"

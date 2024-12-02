@@ -1,4 +1,4 @@
-package ru.dfhub.eirc.util;
+package ru.dfhub.eirc.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * Util-class for reading a "resources" file
+ * Class for reading a "resources" file
  */
 public class ResourcesReader {
 
@@ -30,7 +30,7 @@ public class ResourcesReader {
         String line;
         try {
             while ((line = reader.readLine()) != null) {
-                builder.append(line).append("\n");
+                builder.append(line);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -18,15 +18,18 @@ allprojects {
 }
 
 subprojects {
-    apply(plugin = "com.gradleup.shadow")
-    apply(plugin = "application")
+    version = rootProject.version
+    group = rootProject.group
 
-    tasks.build {
-        dependsOn(tasks.withType<ShadowJar>())
-    }
+    apply(plugin = "com.gradleup.shadow")
 
     dependencies {
         implementation("org.json:json:20240303")
+        if (project.name !== "common") implementation(project(":common"))
+    }
+
+    tasks.build {
+        dependsOn(tasks.withType<ShadowJar>())
     }
 }
 
