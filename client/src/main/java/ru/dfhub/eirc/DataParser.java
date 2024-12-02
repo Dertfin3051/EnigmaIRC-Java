@@ -1,37 +1,15 @@
 package ru.dfhub.eirc;
 
 import org.json.JSONObject;
+import ru.dfhub.eirc.packet.UserMessagePacket;
+import ru.dfhub.eirc.packet.UserSessionPacket;
 import ru.dfhub.eirc.util.Encryption;
 import ru.dfhub.eirc.util.NotificationSound;
-import ru.dfhub.eirc.common.ResourcesReader;
 
 /**
  * Class for working with data and processing it
  */
 public class DataParser {
-
-    /**
-     * Types of incoming and outgoing messages
-     */
-    public enum MessageType {
-        USER_MESSAGE("user_message"), // User text messages
-        USER_SESSION("user_session"); // Messages about user join/leave
-
-        private String fileName;
-
-        MessageType(String fileName) {
-            this.fileName = fileName;
-        }
-
-        private String getResourcesPath() {
-            return "message_templates/%s.json".formatted(this.fileName);
-        }
-
-        public String getTemplate() {
-            return new ResourcesReader(this.getResourcesPath()).readString().replace("\n", "");
-        }
-    }
-
     /**
      * Parse the incoming message and take the necessary action to work with it
      * @param data Raw data from server
@@ -44,8 +22,8 @@ public class DataParser {
 
 
         switch (dataObj.getString("type")) {
-            case "user-message" -> handleUserMessage(dataObj.getJSONObject("content"));
-            case "user-session" -> handleUserSession(dataObj.getJSONObject("content"));
+            case "user-message" -> handleUserMessage(UserMessagePacket.deserialize(dataObj));
+            case "user-session" -> handleUserSession(UserSessionPacket.deserialize(dataObj));
             case "server-shutdown" -> Main.handleServerShutdown();
         }
     }
@@ -55,15 +33,6 @@ public class DataParser {
      * @param message Message
      */
     public static void handleOutputMessage(String message) {
-        String template;
-        try {
-            template = MessageType.USER_MESSAGE.getTemplate();
-        } catch (Exception e) {
-            Gui.showNewMessage("There was an error sending the message (receiving template)", Gui.MessageType.SYSTEM_ERROR);
-            e.printStackTrace();
-            return;
-        }
-
         String encryptedMessage;
         try {
             encryptedMessage = Encryption.encrypt(message);
@@ -73,10 +42,8 @@ public class DataParser {
             return;
         }
 
-        Main.getServerConnection().sendToServer(template
-            .replace("%user%", Main.getConfig().getString("username"))
-            .replace("%message%", encryptedMessage)
-        );
+        String msg = new UserMessagePacket(Main.getConfig().getString("username"), encryptedMessage).toStr();
+        Main.getServerConnection().sendToServer(msg);
     }
 
     /**
@@ -84,30 +51,17 @@ public class DataParser {
      * @param isJoin Is join
      */
     public static void handleOutputSession(boolean isJoin) {
-        String status = isJoin ? "join" : "leave";
-
-        String template;
-        try {
-            template = MessageType.USER_SESSION.getTemplate();
-        } catch (Exception e) {
-            Gui.showNewMessage("There was an error sending the session status (receiving template)", Gui.MessageType.SYSTEM_ERROR);
-            e.printStackTrace();
-            return;
-        }
-
-        Main.getServerConnection().sendToServer(template
-                .replace("%user%", Main.getConfig().getString("username"))
-                .replace("%status%", status)
-        );
+        UserSessionPacket msg = new UserSessionPacket(Main.getConfig().getString("username"), isJoin);
+        Main.getServerConnection().sendToServer(msg.toStr());
     }
 
     /**
      * Processing an incoming user message
      * @param data Data's "content" object
      */
-    private static void handleUserMessage(JSONObject data) {
-        String sender = data.getString("user");
-        String encryptedMessage = data.getString("message"); // In ftr, decrypt and handle decryption errors here
+    private static void handleUserMessage(UserMessagePacket data) {
+        String sender = data.user();
+        String encryptedMessage = data.message(); // In ftr, decrypt and handle decryption errors here
 
         String message;
         try {
@@ -132,9 +86,9 @@ public class DataParser {
      * Handle input user-session(join/leave) message and show it
      * @param data Data's "content" object
      */
-    private static void handleUserSession(JSONObject data) {
-        String user = data.getString("user");
-        String status = data.getString("status").equals("join") ? "joined!" : "left.";
+    private static void handleUserSession(UserSessionPacket data) {
+        String user = data.user();
+        String status = data.isJoin() ? "joined!" : "left.";
 
         String formattedMessage = "%s %s".formatted(user, status);
 

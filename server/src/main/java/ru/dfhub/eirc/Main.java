@@ -3,7 +3,6 @@ package ru.dfhub.eirc;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-import ru.dfhub.eirc.common.ResourcesReader;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -45,9 +44,7 @@ public class Main {
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Sending a server shutdown signal to clients...");
-            users.forEach(user ->
-                    user.sendOutMessage(new ResourcesReader("message_templates/server_shutdown.json").readString())
-            );
+            users.forEach(user -> user.sendOutMessage(new JSONObject().put("type", "server-shutdown").toString()));
             logger.info("Server shutdown signal sent successfully!");
             logger.info("Shutdown server...");
         }));
