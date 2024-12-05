@@ -9,6 +9,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -42,12 +44,17 @@ public class Main {
             System.exit(0);
         } // Busy or invalid port, internal network errors
 
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor(); // Virtual thread executor
+
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             logger.info("Sending a server shutdown signal to clients...");
             users.forEach(user -> user.sendOutMessage(new JSONObject().put("type", "server-shutdown").toString()));
             logger.info("Server shutdown signal sent successfully!");
             logger.info("Shutdown server...");
+            executor.close();
         }));
+
+
 
         // Handling new users
         while (true) {
@@ -56,7 +63,7 @@ public class Main {
                 logger.debug("New user accepted. Trying to init UserHandler.");
                 UserHandler userHandler = new UserHandler(user); // Accepting new user and create UserHandler
                 logger.debug("UserHandler initialized successfully. Start processing thread...");
-                userHandler.start(); // Run UserHandler
+                executor.submit(userHandler); // Run UserHandler in virtual thread
                 users.add(userHandler); // Add to users list
                 logger.debug("Thread started. User added to user-list");
                 logger.info("New user handled successfully!");
